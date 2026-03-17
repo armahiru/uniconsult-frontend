@@ -7,6 +7,7 @@ const VerifyEmail = () => {
   const [searchParams] = useSearchParams()
   const [status, setStatus] = useState('verifying')
   const [message, setMessage] = useState('')
+  const [progress, setProgress] = useState(0)
 
   useEffect(() => {
     const token = searchParams.get('token')
@@ -19,8 +20,11 @@ const VerifyEmail = () => {
   }, [searchParams])
 
   const verifyEmail = async (token) => {
+    setProgress(30)
+    const timer = setTimeout(() => setProgress(60), 300)
     try {
       const { data } = await authAPI.verifyEmail(token)
+      setProgress(90)
       if (data.success) {
         setStatus('success')
         setMessage('Email verified successfully!')
@@ -32,26 +36,36 @@ const VerifyEmail = () => {
       setStatus('error')
       setMessage('Verification failed')
     }
+    clearTimeout(timer)
+    setProgress(100)
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-main">
       <Navbar />
-      <div className="flex items-center justify-center py-20">
-        <div className="card max-w-md w-full text-center">
-          {status === 'verifying' && <p>Verifying your email...</p>}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '5rem 1rem' }}>
+        <div className="card" style={{ maxWidth: '28rem', width: '100%', textAlign: 'center', borderRadius: '1rem', padding: '2rem' }}>
+          {status === 'verifying' && (
+            <div>
+              <p style={{ marginBottom: '1rem', fontWeight: 600, color: 'var(--gray-600)' }}>Verifying your email...</p>
+              <div className="progress-bar-container">
+                <div className="progress-bar-fill" style={{ width: `${progress}%` }} />
+              </div>
+              <p className="progress-text">{progress}%</p>
+            </div>
+          )}
           {status === 'success' && (
             <>
-              <div className="text-6xl mb-4">✅</div>
-              <h2 className="text-2xl font-bold mb-4">{message}</h2>
-              <Link to="/login" className="btn-primary">Go to Login</Link>
+              <div style={{ fontSize: '3.75rem', marginBottom: '1rem' }}>✅</div>
+              <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '1rem' }}>{message}</h2>
+              <Link to="/login" className="btn btn-primary">Go to Login</Link>
             </>
           )}
           {status === 'error' && (
             <>
-              <div className="text-6xl mb-4">❌</div>
-              <h2 className="text-2xl font-bold mb-4">{message}</h2>
-              <Link to="/register" className="btn-primary">Back to Register</Link>
+              <div style={{ fontSize: '3.75rem', marginBottom: '1rem' }}>❌</div>
+              <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '1rem' }}>{message}</h2>
+              <Link to="/register" className="btn btn-primary">Back to Register</Link>
             </>
           )}
         </div>
