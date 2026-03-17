@@ -803,3 +803,18 @@ img { max-width: 100%; display: block; }
 
 /* Disabled state */
 .disabled { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+
+/* Back button */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--gray-500);
+  transition: color 0.2s;
+  padding: 0.375rem 0;
+  margin-bottom: 0.75rem;
+}
+.back-btn:hover { color: var(--blue-600); }
+.back-btn svg { width: 1rem; height: 1rem; }

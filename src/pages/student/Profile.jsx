@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { studentAPI } from '../../services/api'
 import { useAuth } from '../../context/AuthContext'
 import toast from 'react-hot-toast'
@@ -15,6 +16,7 @@ const Profile = () => {
   const [progress, setProgress] = useState(0)
   const [saving, setSaving] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
     fetchProfile()
@@ -113,6 +115,10 @@ const Profile = () => {
         <main className="page-main">
           <div style={{ maxWidth: '56rem' }}>
             {/* Header */}
+            <button onClick={() => navigate(-1)} className="back-btn">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+              Back
+            </button>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2rem' }}>
               <h1 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--gray-900)' }}>My Profile</h1>
               {!editing && (

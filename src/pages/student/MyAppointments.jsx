@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { studentAPI } from '../../services/api'
 import toast from 'react-hot-toast'
 import Navbar from '../../components/Navbar'
@@ -9,6 +10,7 @@ const MyAppointments = () => {
   const [loading, setLoading] = useState(true)
   const [progress, setProgress] = useState(0)
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => { fetchAppointments() }, [])
 
@@ -69,6 +71,10 @@ const MyAppointments = () => {
       <div className="page-layout">
         <Sidebar mobileOpen={sidebarOpen} onMobileClose={() => setSidebarOpen(false)} />
         <main className="page-main">
+          <button onClick={() => navigate(-1)} className="back-btn">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+            Back
+          </button>
           <h1 style={{ fontSize: '1.875rem', fontWeight: 700, marginBottom: '2rem' }}>My Appointments</h1>
           {appointments.length > 0 ? (
             <div className="space-y-4">

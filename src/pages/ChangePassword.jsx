@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { authAPI } from '../services/api'
 import toast from 'react-hot-toast'
 import Navbar from '../components/Navbar'
@@ -12,6 +13,7 @@ const ChangePassword = () => {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -47,6 +49,10 @@ const ChangePassword = () => {
         <Sidebar mobileOpen={sidebarOpen} onMobileClose={() => setSidebarOpen(false)} />
         <main className="page-main">
           <div style={{ maxWidth: '32rem', margin: '0 auto' }}>
+            <button onClick={() => navigate(-1)} className="back-btn">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+              Back
+            </button>
             <div style={{ background: '#fff', borderRadius: '1rem', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', border: '1px solid var(--gray-100)', overflow: 'hidden' }}>
               {/* Header */}
               <div style={{ background: 'linear-gradient(to right, var(--blue-600), var(--indigo-600))', padding: '1.25rem 1.5rem' }}>

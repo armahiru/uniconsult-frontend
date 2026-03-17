@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { lecturerAPI } from '../../services/api'
 import toast from 'react-hot-toast'
 import Navbar from '../../components/Navbar'
@@ -15,6 +16,7 @@ const Schedule = () => {
   const [newSlot, setNewSlot] = useState({ day: 'Monday', startTime: '09:00', endTime: '10:00' })
   const [activeTab, setActiveTab] = useState('availability')
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => { fetchData() }, [])
 
@@ -87,6 +89,10 @@ const Schedule = () => {
         <Sidebar mobileOpen={sidebarOpen} onMobileClose={() => setSidebarOpen(false)} />
         <main className="page-main">
           <div style={{ maxWidth: '56rem' }}>
+            <button onClick={() => navigate(-1)} className="back-btn">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+              Back
+            </button>
             <h1 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--gray-900)', marginBottom: '0.5rem' }}>Schedule & Availability</h1>
             <p style={{ color: 'var(--gray-500)', fontSize: '0.875rem', marginBottom: '1.5rem' }}>Set your available hours so students can book within those times</p>
 
