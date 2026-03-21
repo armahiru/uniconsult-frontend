@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
@@ -156,9 +156,9 @@ const Sidebar = ({ mobileOpen, onMobileClose }) => {
       </aside>
 
       {/* Desktop sidebar */}
-      <aside style={{ width: '16rem', background: sidebarStyles.bg, minHeight: '100vh', flexShrink: 0, display: 'none' }}>
-        <style>{`@media (min-width: 1024px) { .sidebar-desktop-new { display: block !important; } }`}</style>
-        <div className="sidebar-desktop-new" style={{ display: 'none', width: '16rem', background: sidebarStyles.bg, minHeight: '100vh', position: 'fixed', top: 0, left: 0 }}>
+      <aside className="sidebar-desktop-aside" style={{ width: '16rem', background: sidebarStyles.bg, minHeight: 'calc(100vh - 4rem)', flexShrink: 0, display: 'none' }}>
+        <style>{`@media (min-width: 1024px) { .sidebar-desktop-aside { display: block !important; } .lg-hidden { display: none !important; } }`}</style>
+        <div style={{ width: '16rem', background: sidebarStyles.bg, minHeight: 'calc(100vh - 4rem)', position: 'sticky', top: '4rem' }}>
           {sidebarContent}
         </div>
       </aside>

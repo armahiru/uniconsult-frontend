@@ -8,7 +8,6 @@ import Sidebar from '../../components/Sidebar'
 const Appointments = () => {
   const [appointments, setAppointments] = useState([])
   const [loading, setLoading] = useState(true)
-  const [progress, setProgress] = useState(0)
   const [filter, setFilter] = useState('PENDING')
   const [showZoomModal, setShowZoomModal] = useState(false)
   const [selectedAppointment, setSelectedAppointment] = useState(null)
@@ -19,17 +18,11 @@ const Appointments = () => {
   useEffect(() => { fetchAppointments() }, [])
 
   const fetchAppointments = async () => {
-    setProgress(10)
-    const t1 = setTimeout(() => setProgress(40), 200)
-    const t2 = setTimeout(() => setProgress(70), 500)
     try {
       const { data } = await lecturerAPI.getAppointments()
-      setProgress(90)
       if (data.success) setAppointments(data.appointments)
     } catch (error) { toast.error('Failed to fetch appointments') }
-    clearTimeout(t1); clearTimeout(t2)
-    setProgress(100)
-    setTimeout(() => setLoading(false), 300)
+    setLoading(false)
   }
 
   const handleApprove = async (id) => {
@@ -76,12 +69,11 @@ const Appointments = () => {
       <Navbar onMenuToggle={() => setSidebarOpen(!sidebarOpen)} />
       <div style={{ display: 'flex' }}>
         <Sidebar mobileOpen={sidebarOpen} onMobileClose={() => setSidebarOpen(false)} />
-        <main style={{ flex: 1, padding: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ maxWidth: '24rem', width: '100%', textAlign: 'center' }}>
-            <p style={{ marginBottom: '1rem', fontWeight: 600, color: '#6b7280' }}>Loading requests...</p>
-            <div className="progress-bar-container"><div className="progress-bar-fill" style={{ width: `${progress}%` }} /></div>
-            <p className="progress-text">{progress}%</p>
-          </div>
+        <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
+          <svg className="animate-spin" style={{ width: '2rem', height: '2rem', color: '#2563eb' }} fill="none" viewBox="0 0 24 24">
+            <circle style={{ opacity: 0.25 }} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path style={{ opacity: 0.75 }} fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+          </svg>
         </main>
       </div>
     </div>
@@ -94,7 +86,6 @@ const Appointments = () => {
         <Sidebar mobileOpen={sidebarOpen} onMobileClose={() => setSidebarOpen(false)} />
         <main style={{ flex: 1, padding: '1.5rem', overflow: 'hidden' }}>
           <div style={{ maxWidth: '56rem' }}>
-            {/* Header */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.25rem' }}>
               <button onClick={() => navigate(-1)} style={{ color: '#6b7280', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
                 <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
@@ -102,7 +93,6 @@ const Appointments = () => {
               <h1 style={{ fontSize: '1.375rem', fontWeight: 700, color: '#111827' }}>Appointment Requests</h1>
             </div>
 
-            {/* Filter Tabs */}
             <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem' }}>
               {filters.map(f => {
                 const isActive = filter === f.key
@@ -120,7 +110,6 @@ const Appointments = () => {
               })}
             </div>
 
-            {/* Appointment Cards */}
             {filteredAppointments.length > 0 ? (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 {filteredAppointments.map((apt) => {
@@ -133,7 +122,6 @@ const Appointments = () => {
                       onMouseEnter={(e) => e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.06)'}
                       onMouseLeave={(e) => e.currentTarget.style.boxShadow = 'none'}
                     >
-                      {/* Student info row */}
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                           <div style={{ width: '2.75rem', height: '2.75rem', borderRadius: '9999px', background: color, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
@@ -148,8 +136,6 @@ const Appointments = () => {
                           <span style={{ background: '#dcfce7', color: '#166534', padding: '0.25rem 0.625rem', borderRadius: '9999px', fontSize: '0.6875rem', fontWeight: 600 }}>NEW</span>
                         )}
                       </div>
-
-                      {/* Details */}
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.375rem', marginBottom: '0.75rem', fontSize: '0.8125rem', color: '#6b7280' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                           <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
@@ -173,21 +159,15 @@ const Appointments = () => {
                           </div>
                         )}
                       </div>
-
-                      {/* Action Buttons */}
                       {apt.status === 'PENDING' && (
                         <div style={{ display: 'flex', gap: '0.75rem' }}>
                           <button onClick={() => handleDecline(apt._id)} style={{ flex: 1, padding: '0.625rem', background: '#fee2e2', color: '#dc2626', borderRadius: '0.75rem', fontSize: '0.8125rem', fontWeight: 600, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.375rem', transition: 'background 0.2s' }}
-                            onMouseEnter={(e) => e.currentTarget.style.background = '#fecaca'}
-                            onMouseLeave={(e) => e.currentTarget.style.background = '#fee2e2'}
-                          >
+                            onMouseEnter={(e) => e.currentTarget.style.background = '#fecaca'} onMouseLeave={(e) => e.currentTarget.style.background = '#fee2e2'}>
                             <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                             Decline
                           </button>
                           <button onClick={() => handleApprove(apt._id)} style={{ flex: 1, padding: '0.625rem', background: '#dcfce7', color: '#166534', borderRadius: '0.75rem', fontSize: '0.8125rem', fontWeight: 600, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.375rem', transition: 'background 0.2s' }}
-                            onMouseEnter={(e) => e.currentTarget.style.background = '#bbf7d0'}
-                            onMouseLeave={(e) => e.currentTarget.style.background = '#dcfce7'}
-                          >
+                            onMouseEnter={(e) => e.currentTarget.style.background = '#bbf7d0'} onMouseLeave={(e) => e.currentTarget.style.background = '#dcfce7'}>
                             <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
                             Approve
                           </button>
@@ -212,7 +192,6 @@ const Appointments = () => {
         </main>
       </div>
 
-      {/* Zoom Modal */}
       {showZoomModal && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
           <div style={{ background: '#fff', borderRadius: '1rem', boxShadow: '0 25px 50px rgba(0,0,0,0.25)', maxWidth: '24rem', width: '100%', padding: '1.5rem' }}>

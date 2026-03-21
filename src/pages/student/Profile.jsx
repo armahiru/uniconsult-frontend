@@ -13,7 +13,6 @@ const Profile = () => {
   const [editing, setEditing] = useState(false)
   const [formData, setFormData] = useState({ name: '', phone: '', studentId: '', department: '' })
   const [loading, setLoading] = useState(true)
-  const [progress, setProgress] = useState(0)
   const [saving, setSaving] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const navigate = useNavigate()
@@ -32,14 +31,8 @@ const Profile = () => {
 
   const fetchProfile = async (showLoader = true) => {
     try {
-      if (showLoader) {
-        setLoading(true)
-        setProgress(10)
-        setTimeout(() => setProgress(40), 200)
-        setTimeout(() => setProgress(70), 500)
-      }
+      if (showLoader) setLoading(true)
       const { data } = await studentAPI.getProfile()
-      if (showLoader) setProgress(90)
       if (data.success) {
         setProfile(data.userData)
         setFormData({
@@ -51,10 +44,7 @@ const Profile = () => {
       }
     } catch (error) { toast.error('Failed to fetch profile') }
     finally {
-      if (showLoader) {
-        setProgress(100)
-        setTimeout(() => setLoading(false), 300)
-      }
+      if (showLoader) setLoading(false)
     }
   }
 
@@ -87,18 +77,15 @@ const Profile = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-main">
+      <div style={{ minHeight: '100vh', background: '#f8fafc' }}>
         <Navbar onMenuToggle={() => setSidebarOpen(!sidebarOpen)} />
-        <div className="page-layout">
+        <div style={{ display: 'flex' }}>
           <Sidebar mobileOpen={sidebarOpen} onMobileClose={() => setSidebarOpen(false)} />
-          <main className="page-main">
-            <div style={{ maxWidth: '24rem', margin: '4rem auto', textAlign: 'center' }}>
-              <p style={{ marginBottom: '1rem', fontWeight: 600, color: 'var(--gray-600)' }}>Loading profile...</p>
-              <div className="progress-bar-container">
-                <div className="progress-bar-fill" style={{ width: `${progress}%` }} />
-              </div>
-              <p className="progress-text">{progress}%</p>
-            </div>
+          <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
+            <svg className="animate-spin" style={{ width: '2rem', height: '2rem', color: '#2563eb' }} fill="none" viewBox="0 0 24 24">
+              <circle style={{ opacity: 0.25 }} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path style={{ opacity: 0.75 }} fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+            </svg>
           </main>
         </div>
       </div>
@@ -108,11 +95,11 @@ const Profile = () => {
   if (!profile) return null
 
   return (
-    <div className="min-h-screen bg-gradient-main mobile-overflow-fix">
+    <div style={{ minHeight: '100vh', background: '#f8fafc' }} className="mobile-overflow-fix">
       <Navbar onMenuToggle={() => setSidebarOpen(!sidebarOpen)} />
-      <div className="page-layout">
+      <div style={{ display: 'flex' }}>
         <Sidebar mobileOpen={sidebarOpen} onMobileClose={() => setSidebarOpen(false)} />
-        <main className="page-main">
+        <main style={{ flex: 1, padding: '1.5rem', overflow: 'hidden' }}>
           <div style={{ maxWidth: '56rem' }}>
             {/* Header */}
             <button onClick={() => navigate(-1)} className="back-btn">
@@ -298,6 +285,7 @@ const Profile = () => {
             )}
 
           </div>
+          <div className="mobile-bottom-spacer" style={{ display: 'none' }} />
         </main>
       </div>
     </div>

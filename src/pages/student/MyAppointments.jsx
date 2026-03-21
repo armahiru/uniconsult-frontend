@@ -8,7 +8,6 @@ import Sidebar from '../../components/Sidebar'
 const MyAppointments = () => {
   const [appointments, setAppointments] = useState([])
   const [loading, setLoading] = useState(true)
-  const [progress, setProgress] = useState(0)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [currentMonth, setCurrentMonth] = useState(new Date())
   const navigate = useNavigate()
@@ -16,17 +15,11 @@ const MyAppointments = () => {
   useEffect(() => { fetchAppointments() }, [])
 
   const fetchAppointments = async () => {
-    setProgress(10)
-    const t1 = setTimeout(() => setProgress(40), 200)
-    const t2 = setTimeout(() => setProgress(70), 500)
     try {
       const { data } = await studentAPI.getAppointments()
-      setProgress(90)
       if (data.success) setAppointments(data.appointments)
     } catch (error) { toast.error('Failed to fetch appointments') }
-    clearTimeout(t1); clearTimeout(t2)
-    setProgress(100)
-    setTimeout(() => setLoading(false), 300)
+    setLoading(false)
   }
 
   const handleCancel = async (id) => {
@@ -74,12 +67,11 @@ const MyAppointments = () => {
       <Navbar onMenuToggle={() => setSidebarOpen(!sidebarOpen)} />
       <div style={{ display: 'flex' }}>
         <Sidebar mobileOpen={sidebarOpen} onMobileClose={() => setSidebarOpen(false)} />
-        <main style={{ flex: 1, padding: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ maxWidth: '24rem', width: '100%', textAlign: 'center' }}>
-            <p style={{ marginBottom: '1rem', fontWeight: 600, color: '#6b7280' }}>Loading schedule...</p>
-            <div className="progress-bar-container"><div className="progress-bar-fill" style={{ width: `${progress}%` }} /></div>
-            <p className="progress-text">{progress}%</p>
-          </div>
+        <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
+          <svg className="animate-spin" style={{ width: '2rem', height: '2rem', color: '#2563eb' }} fill="none" viewBox="0 0 24 24">
+            <circle style={{ opacity: 0.25 }} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path style={{ opacity: 0.75 }} fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+          </svg>
         </main>
       </div>
     </div>

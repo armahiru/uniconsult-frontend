@@ -43,11 +43,11 @@ const ChangePassword = () => {
   )
 
   return (
-    <div className="min-h-screen bg-gradient-main mobile-overflow-fix">
+    <div style={{ minHeight: '100vh', background: '#f8fafc' }} className="mobile-overflow-fix">
       <Navbar onMenuToggle={() => setSidebarOpen(!sidebarOpen)} />
-      <div className="page-layout">
+      <div style={{ display: 'flex' }}>
         <Sidebar mobileOpen={sidebarOpen} onMobileClose={() => setSidebarOpen(false)} />
-        <main className="page-main">
+        <main style={{ flex: 1, padding: '1.5rem', overflow: 'hidden' }}>
           <div style={{ maxWidth: '32rem', margin: '0 auto' }}>
             <button onClick={() => navigate(-1)} className="back-btn">
               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
@@ -123,6 +123,7 @@ const ChangePassword = () => {
               </div>
             </div>
           </div>
+          <div className="mobile-bottom-spacer" style={{ display: 'none' }} />
         </main>
       </div>
     </div>

@@ -48,16 +48,14 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-main">
+      <div style={{ minHeight: '100vh', background: '#f8fafc' }}>
         <Navbar onMenuToggle={() => setSidebarOpen(!sidebarOpen)} />
-        <div className="page-layout">
+        <div style={{ display: 'flex' }}>
           <Sidebar mobileOpen={sidebarOpen} onMobileClose={() => setSidebarOpen(false)} />
-          <main className="page-main">
-            <div style={{ maxWidth: '24rem', margin: '4rem auto', textAlign: 'center' }}>
-              <p style={{ marginBottom: '1rem', fontWeight: 600, color: 'var(--gray-600)' }}>Loading dashboard...</p>
-              <div className="progress-bar-container">
-                <div className="progress-bar-fill" style={{ width: `${progress}%` }} />
-              </div>
+          <main style={{ flex: 1, padding: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ maxWidth: '24rem', width: '100%', textAlign: 'center' }}>
+              <p style={{ marginBottom: '1rem', fontWeight: 600, color: '#6b7280' }}>Loading dashboard...</p>
+              <div className="progress-bar-container"><div className="progress-bar-fill" style={{ width: `${progress}%` }} /></div>
               <p className="progress-text">{progress}%</p>
             </div>
           </main>
@@ -93,11 +91,11 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-main mobile-overflow-fix">
+    <div style={{ minHeight: '100vh', background: '#f8fafc' }} className="mobile-overflow-fix">
       <Navbar onMenuToggle={() => setSidebarOpen(!sidebarOpen)} />
-      <div className="page-layout">
+      <div style={{ display: 'flex' }}>
         <Sidebar mobileOpen={sidebarOpen} onMobileClose={() => setSidebarOpen(false)} />
-        <main className="page-main">
+        <main style={{ flex: 1, padding: '1.5rem', overflow: 'hidden' }}>
           <div style={{ maxWidth: '72rem' }}>
             {/* Welcome Header */}
             <div style={{ marginBottom: '2rem' }}>
@@ -205,6 +203,7 @@ const Dashboard = () => {
               )}
             </div>
           </div>
+          <div className="mobile-bottom-spacer" style={{ display: 'none' }} />
         </main>
       </div>
     </div>

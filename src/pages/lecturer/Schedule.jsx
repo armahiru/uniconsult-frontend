@@ -11,7 +11,6 @@ const Schedule = () => {
   const [schedule, setSchedule] = useState([])
   const [availability, setAvailability] = useState([])
   const [loading, setLoading] = useState(true)
-  const [progress, setProgress] = useState(0)
   const [saving, setSaving] = useState(false)
   const [newSlot, setNewSlot] = useState({ day: 'Monday', startTime: '09:00', endTime: '10:00' })
   const [activeTab, setActiveTab] = useState('availability')
@@ -21,22 +20,15 @@ const Schedule = () => {
   useEffect(() => { fetchData() }, [])
 
   const fetchData = async () => {
-    setProgress(10)
-    const timer1 = setTimeout(() => setProgress(40), 200)
-    const timer2 = setTimeout(() => setProgress(70), 500)
     try {
       const [scheduleRes, profileRes] = await Promise.all([
         lecturerAPI.getSchedule(),
         lecturerAPI.getProfile()
       ])
-      setProgress(90)
       if (scheduleRes.data.success) setSchedule(scheduleRes.data.schedule)
       if (profileRes.data.success) setAvailability(profileRes.data.lecturer.availability || [])
     } catch (error) { console.error('Failed to fetch data', error) }
-    clearTimeout(timer1)
-    clearTimeout(timer2)
-    setProgress(100)
-    setTimeout(() => setLoading(false), 300)
+    setLoading(false)
   }
 
   const addSlot = () => {
@@ -65,29 +57,26 @@ const Schedule = () => {
   }, {})
 
   if (loading) return (
-    <div className="min-h-screen bg-gradient-main">
+    <div style={{ minHeight: '100vh', background: '#f8fafc' }}>
       <Navbar onMenuToggle={() => setSidebarOpen(!sidebarOpen)} />
-      <div className="page-layout">
+      <div style={{ display: 'flex' }}>
         <Sidebar mobileOpen={sidebarOpen} onMobileClose={() => setSidebarOpen(false)} />
-        <main className="page-main">
-          <div style={{ maxWidth: '24rem', margin: '4rem auto', textAlign: 'center' }}>
-            <p style={{ marginBottom: '1rem', fontWeight: 600, color: 'var(--gray-600)' }}>Loading schedule...</p>
-            <div className="progress-bar-container">
-              <div className="progress-bar-fill" style={{ width: `${progress}%` }} />
-            </div>
-            <p className="progress-text">{progress}%</p>
-          </div>
+        <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
+          <svg className="animate-spin" style={{ width: '2rem', height: '2rem', color: '#2563eb' }} fill="none" viewBox="0 0 24 24">
+            <circle style={{ opacity: 0.25 }} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path style={{ opacity: 0.75 }} fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+          </svg>
         </main>
       </div>
     </div>
   )
 
   return (
-    <div className="min-h-screen bg-gradient-main mobile-overflow-fix">
+    <div style={{ minHeight: '100vh', background: '#f8fafc' }} className="mobile-overflow-fix">
       <Navbar onMenuToggle={() => setSidebarOpen(!sidebarOpen)} />
-      <div className="page-layout">
+      <div style={{ display: 'flex' }}>
         <Sidebar mobileOpen={sidebarOpen} onMobileClose={() => setSidebarOpen(false)} />
-        <main className="page-main">
+        <main style={{ flex: 1, padding: '1.5rem', overflow: 'hidden' }}>
           <div style={{ maxWidth: '56rem' }}>
             <button onClick={() => navigate(-1)} className="back-btn">
               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
@@ -205,6 +194,7 @@ const Schedule = () => {
               )
             )}
           </div>
+          <div className="mobile-bottom-spacer" style={{ display: 'none' }} />
         </main>
       </div>
     </div>
