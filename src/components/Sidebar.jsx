@@ -1,73 +1,166 @@
 import { useState, useEffect } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 const Sidebar = ({ mobileOpen, onMobileClose }) => {
-  const { isStudent } = useAuth()
+  const { isStudent, logout } = useAuth()
   const location = useLocation()
-  const [collapsed, setCollapsed] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (onMobileClose) onMobileClose()
   }, [location.pathname])
 
   const studentLinks = [
-    { path: '/student/dashboard', label: 'Dashboard', icon: '📊' },
-    { path: '/student/lecturers', label: 'Find Lecturers', icon: '🔍' },
-    { path: '/student/appointments', label: 'My Appointments', icon: '📅' },
-    { path: '/student/profile', label: 'Profile', icon: '👤' },
-    { path: '/student/change-password', label: 'Change Password', icon: '🔒' }
+    { path: '/student/dashboard', label: 'Dashboard', icon: (
+      <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
+    )},
+    { path: '/student/appointments', label: 'My Schedule', icon: (
+      <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+    )},
+    { path: '/student/lecturers', label: 'Browse Lecturer', icon: (
+      <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+    )},
+    { path: '/student/profile', label: 'Profile', icon: (
+      <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+    )},
+    { path: '/student/change-password', label: 'Settings', icon: (
+      <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.573-1.066z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+    )}
   ]
 
   const lecturerLinks = [
-    { path: '/lecturer/dashboard', label: 'Dashboard', icon: '📊' },
-    { path: '/lecturer/appointments', label: 'Requests', icon: '📬' },
-    { path: '/lecturer/schedule', label: 'Schedule', icon: '📅' },
-    { path: '/lecturer/profile', label: 'Profile', icon: '👤' },
-    { path: '/lecturer/change-password', label: 'Change Password', icon: '🔒' }
+    { path: '/lecturer/dashboard', label: 'Dashboard', icon: (
+      <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
+    )},
+    { path: '/lecturer/appointments', label: 'Requests', icon: (
+      <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+    )},
+    { path: '/lecturer/schedule', label: 'Schedule', icon: (
+      <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+    )},
+    { path: '/lecturer/profile', label: 'Profile', icon: (
+      <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+    )},
+    { path: '/lecturer/change-password', label: 'Settings', icon: (
+      <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.573-1.066z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+    )}
   ]
 
   const links = isStudent ? studentLinks : lecturerLinks
 
+  const handleLogout = () => {
+    logout()
+    navigate('/login')
+  }
+
+  const sidebarStyles = {
+    bg: '#1e293b',
+    activeBg: '#2563eb',
+    text: '#94a3b8',
+    activeText: '#fff',
+    hoverBg: 'rgba(255,255,255,0.08)',
+  }
+
   const sidebarContent = (
-    <div className="sidebar-content">
-      <button onClick={() => setCollapsed(!collapsed)} className="sidebar-toggle lg-block" style={{ display: 'none' }} title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}>
-        <svg style={{ width: '1.25rem', height: '1.25rem', transition: 'transform 0.3s', transform: collapsed ? 'rotate(180deg)' : 'none' }} fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '1.5rem 1rem' }}>
+      {/* Logo */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0 0.5rem', marginBottom: '2rem' }}>
+        <svg width="36" height="36" viewBox="0 0 48 48" fill="none">
+          <path d="M24 4L2 16l22 12 22-12L24 4z" fill="#2563eb"/>
+          <path d="M6 22v12c0 0 6 8 18 8s18-8 18-8V22" stroke="#2563eb" strokeWidth="2.5" fill="none"/>
+          <rect x="38" y="16" width="2.5" height="18" rx="1.25" fill="#2563eb"/>
+          <circle cx="39.25" cy="36" r="2.5" fill="#2563eb"/>
         </svg>
-      </button>
+        <span style={{ fontSize: '1.125rem', fontWeight: 700, color: '#fff' }}>UniConsult</span>
 
-      <button onClick={onMobileClose} className="sidebar-close lg-hidden" aria-label="Close sidebar">
-        <svg style={{ width: '1.25rem', height: '1.25rem' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
+        {/* Close button - mobile only */}
+        <button onClick={onMobileClose} className="lg-hidden" style={{ marginLeft: 'auto', color: '#94a3b8', background: 'none', border: 'none', cursor: 'pointer', padding: '0.25rem' }} aria-label="Close sidebar">
+          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+        </button>
+      </div>
 
-      {!collapsed && (
-        <h2 className="sidebar-label">{isStudent ? 'Student Portal' : 'Lecturer Portal'}</h2>
-      )}
-
-      <nav className="space-y-1">
-        {links.map((link) => {
-          const isActive = location.pathname === link.path
-          return (
-            <Link key={link.path} to={link.path} title={collapsed ? link.label : ''} className={`sidebar-link ${isActive ? 'active' : ''} ${collapsed ? 'collapsed' : ''}`}>
-              <span className="sidebar-link-icon">{link.icon}</span>
-              {!collapsed && <span className="sidebar-link-text">{link.label}</span>}
-            </Link>
-          )
-        })}
+      {/* Nav Links */}
+      <nav style={{ flex: 1 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+          {links.map((link) => {
+            const isActive = location.pathname === link.path
+            return (
+              <Link
+                key={link.path}
+                to={link.path}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.75rem',
+                  padding: '0.75rem 1rem',
+                  borderRadius: '0.75rem',
+                  fontSize: '0.875rem',
+                  fontWeight: isActive ? 600 : 500,
+                  color: isActive ? sidebarStyles.activeText : sidebarStyles.text,
+                  background: isActive ? sidebarStyles.activeBg : 'transparent',
+                  transition: 'all 0.2s',
+                  textDecoration: 'none',
+                }}
+                onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.background = sidebarStyles.hoverBg }}
+                onMouseLeave={(e) => { if (!isActive) e.currentTarget.style.background = 'transparent' }}
+              >
+                {link.icon}
+                {link.label}
+              </Link>
+            )
+          })}
+        </div>
       </nav>
+
+      {/* Logout */}
+      <button
+        onClick={handleLogout}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.75rem',
+          padding: '0.75rem 1rem',
+          borderRadius: '0.75rem',
+          fontSize: '0.875rem',
+          fontWeight: 500,
+          color: sidebarStyles.text,
+          background: 'transparent',
+          border: 'none',
+          cursor: 'pointer',
+          width: '100%',
+          transition: 'all 0.2s',
+        }}
+        onMouseEnter={(e) => { e.currentTarget.style.background = sidebarStyles.hoverBg }}
+        onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent' }}
+      >
+        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
+        Logout
+      </button>
     </div>
   )
 
   return (
     <>
-      {mobileOpen && <div className="sidebar-overlay lg-hidden" onClick={onMobileClose} />}
-      <aside className={`sidebar-mobile ${mobileOpen ? 'open' : ''}`}>{sidebarContent}</aside>
-      <aside className={`sidebar-desktop ${collapsed ? 'collapsed' : ''}`} style={{ display: 'none' }}>
-        <style>{`@media (min-width: 1024px) { .sidebar-desktop { display: block !important; } .sidebar-toggle { display: flex !important; } .sidebar-close { display: none !important; } }`}</style>
+      {/* Mobile overlay */}
+      {mobileOpen && <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 40 }} className="lg-hidden" onClick={onMobileClose} />}
+
+      {/* Mobile sidebar */}
+      <aside className="lg-hidden" style={{
+        position: 'fixed', top: 0, left: 0, height: '100%', width: '16rem',
+        background: sidebarStyles.bg, zIndex: 50,
+        transform: mobileOpen ? 'translateX(0)' : 'translateX(-100%)',
+        transition: 'transform 0.3s',
+      }}>
         {sidebarContent}
+      </aside>
+
+      {/* Desktop sidebar */}
+      <aside style={{ width: '16rem', background: sidebarStyles.bg, minHeight: '100vh', flexShrink: 0, display: 'none' }}>
+        <style>{`@media (min-width: 1024px) { .sidebar-desktop-new { display: block !important; } }`}</style>
+        <div className="sidebar-desktop-new" style={{ display: 'none', width: '16rem', background: sidebarStyles.bg, minHeight: '100vh', position: 'fixed', top: 0, left: 0 }}>
+          {sidebarContent}
+        </div>
       </aside>
     </>
   )
