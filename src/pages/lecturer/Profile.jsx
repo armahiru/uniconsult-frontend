@@ -10,31 +10,34 @@ const Profile = () => {
   const [stats, setStats] = useState(null)
   const [editing, setEditing] = useState(false)
   const [uploading, setUploading] = useState(false)
-  const [formData, setFormData] = useState({ name: '', department: '', specialization: '' })
+  const [formData, setFormData] = useState({
+    name: '',
+    department: '',
+    specialization: ''
+  })
   const [loading, setLoading] = useState(true)
-  const [progress, setProgress] = useState(0)
   const [saving, setSaving] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const navigate = useNavigate()
 
-  useEffect(() => { fetchProfile(); fetchStats() }, [])
+  useEffect(() => {
+    fetchProfile()
+    fetchStats()
+  }, [])
 
   const fetchStats = async () => {
     try {
       const { data } = await lecturerAPI.getDashboard()
       if (data.success) setStats(data.dashData)
-    } catch (error) { console.error('Failed to fetch stats') }
+    } catch (error) {
+      console.error('Failed to fetch stats')
+    }
   }
 
   const fetchProfile = async (showLoader = true) => {
     try {
-      if (showLoader) {
-        setLoading(true); setProgress(10)
-        setTimeout(() => setProgress(40), 200)
-        setTimeout(() => setProgress(70), 500)
-      }
+      if (showLoader) setLoading(true)
       const { data } = await lecturerAPI.getProfile()
-      if (showLoader) setProgress(90)
       if (data.success) {
         setProfile(data.lecturer)
         setFormData({
@@ -42,10 +45,13 @@ const Profile = () => {
           department: data.lecturer.department || '',
           specialization: data.lecturer.specialization || ''
         })
-      } else { toast.error(data.message || 'Failed to fetch profile') }
-    } catch (error) { toast.error('Failed to fetch profile') }
-    finally {
-      if (showLoader) { setProgress(100); setTimeout(() => setLoading(false), 300) }
+      } else {
+        toast.error(data.message || 'Failed to fetch profile')
+      }
+    } catch (error) {
+      toast.error('Failed to fetch profile')
+    } finally {
+      if (showLoader) setLoading(false)
     }
   }
 
@@ -59,11 +65,22 @@ const Profile = () => {
         setEditing(false)
         if (data.lecturer) {
           setProfile(data.lecturer)
-          setFormData({ name: data.lecturer.userId?.name || '', department: data.lecturer.department || '', specialization: data.lecturer.specialization || '' })
-        } else { await fetchProfile(false) }
-      } else { toast.error(data.message) }
-    } catch (error) { toast.error('Failed to update profile') }
-    finally { setSaving(false) }
+          setFormData({
+            name: data.lecturer.userId?.name || '',
+            department: data.lecturer.department || '',
+            specialization: data.lecturer.specialization || ''
+          })
+        } else {
+          await fetchProfile(false)
+        }
+      } else {
+        toast.error(data.message)
+      }
+    } catch (error) {
+      toast.error('Failed to update profile')
+    } finally {
+      setSaving(false)
+    }
   }
 
   const getInitials = (name) => {
@@ -73,7 +90,9 @@ const Profile = () => {
 
   const formatDate = (dateStr) => {
     if (!dateStr) return 'N/A'
-    return new Date(dateStr).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+    return new Date(dateStr).toLocaleDateString('en-US', {
+      year: 'numeric', month: 'long', day: 'numeric'
+    })
   }
 
   const handlePhotoUpload = async (e) => {
@@ -99,12 +118,11 @@ const Profile = () => {
         <div className="page-layout">
           <Sidebar mobileOpen={sidebarOpen} onMobileClose={() => setSidebarOpen(false)} />
           <main className="page-main">
-            <div style={{ maxWidth: '24rem', margin: '4rem auto', textAlign: 'center' }}>
-              <p style={{ marginBottom: '1rem', fontWeight: 600, color: 'var(--gray-600)' }}>Loading profile...</p>
-              <div className="progress-bar-container">
-                <div className="progress-bar-fill" style={{ width: `${progress}%` }} />
-              </div>
-              <p className="progress-text">{progress}%</p>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
+              <svg className="animate-spin" style={{ width: '2rem', height: '2rem', color: 'var(--blue-600)' }} fill="none" viewBox="0 0 24 24">
+                <circle style={{ opacity: 0.25 }} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path style={{ opacity: 0.75 }} fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+              </svg>
             </div>
           </main>
         </div>
@@ -126,9 +144,10 @@ const Profile = () => {
         <Sidebar mobileOpen={sidebarOpen} onMobileClose={() => setSidebarOpen(false)} />
         <main className="page-main">
           <div style={{ maxWidth: '56rem' }}>
-            {/* Header */}
             <button onClick={() => navigate(-1)} className="back-btn">
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
               Back
             </button>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2rem' }}>
@@ -145,7 +164,6 @@ const Profile = () => {
 
             {/* Profile Card */}
             <div style={{ background: '#fff', borderRadius: '1rem', boxShadow: '0 1px 2px rgba(0,0,0,0.05)', border: '1px solid var(--gray-200)', overflow: 'hidden' }}>
-              {/* Banner + Avatar */}
               <div className="relative">
                 <div className="profile-banner lecturer" />
                 <div className="profile-avatar-wrapper">
@@ -179,7 +197,6 @@ const Profile = () => {
                 </div>
               </div>
 
-              {/* Profile Info */}
               <div style={{ paddingTop: '4rem', padding: '4rem 2rem 2rem' }}>
                 {!editing ? (
                   <>
@@ -203,7 +220,6 @@ const Profile = () => {
                       </div>
                     </div>
 
-                    {/* Info Grid */}
                     <div className="grid md-grid-2" style={{ gap: '1.25rem' }}>
                       <div className="info-item">
                         <div className="info-icon" style={{ background: 'var(--blue-100)' }}>
@@ -216,7 +232,6 @@ const Profile = () => {
                           <p className="truncate" style={{ fontSize: '0.875rem', fontWeight: 500, color: 'var(--gray-900)', marginTop: '2px' }}>{userEmail}</p>
                         </div>
                       </div>
-
                       <div className="info-item">
                         <div className="info-icon" style={{ background: 'var(--green-100)' }}>
                           <svg style={{ width: '1.25rem', height: '1.25rem', color: 'var(--green-600)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -228,7 +243,6 @@ const Profile = () => {
                           <p style={{ fontSize: '0.875rem', fontWeight: 500, color: 'var(--gray-900)', marginTop: '2px' }}>{profile.department || 'Not provided'}</p>
                         </div>
                       </div>
-
                       <div className="info-item md-col-span-2">
                         <div className="info-icon" style={{ background: 'var(--amber-100)' }}>
                           <svg style={{ width: '1.25rem', height: '1.25rem', color: 'var(--amber-600)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -242,7 +256,6 @@ const Profile = () => {
                       </div>
                     </div>
 
-                    {/* Member Since */}
                     <div style={{ marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid var(--gray-100)' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem', color: 'var(--gray-500)' }}>
                         <svg style={{ width: '1rem', height: '1rem' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -253,7 +266,6 @@ const Profile = () => {
                     </div>
                   </>
                 ) : (
-                  /* Edit Form */
                   <form onSubmit={handleSubmit}>
                     <h2 style={{ fontSize: '1.125rem', fontWeight: 600, color: 'var(--gray-900)', marginBottom: '1.5rem' }}>Edit Profile</h2>
                     <div className="grid md-grid-2" style={{ gap: '1.25rem' }}>
@@ -270,7 +282,6 @@ const Profile = () => {
                         <input type="text" required className="input" value={formData.specialization} onChange={(e) => setFormData({ ...formData, specialization: e.target.value })} placeholder="e.g. Machine Learning" />
                       </div>
                     </div>
-
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginTop: '2rem' }}>
                       <button type="submit" disabled={saving} className="btn btn-primary" style={{ fontSize: '0.875rem', display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.625rem 1.5rem', borderRadius: '0.5rem', opacity: saving ? 0.5 : 1, cursor: saving ? 'not-allowed' : 'pointer' }}>
                         {saving ? (
@@ -292,7 +303,6 @@ const Profile = () => {
               </div>
             </div>
 
-            {/* Activity Stats */}
             {stats && !editing && (
               <div className="grid md-grid-4" style={{ marginTop: '1.5rem', gap: '1rem' }}>
                 <div style={{ background: '#fff', borderRadius: '0.75rem', border: '1px solid var(--gray-200)', padding: '1.25rem', textAlign: 'center' }}>

@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
@@ -48,6 +48,8 @@ const Sidebar = ({ mobileOpen, onMobileClose }) => {
   ]
 
   const links = isStudent ? studentLinks : lecturerLinks
+
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
 
   const handleLogout = () => {
     logout()
@@ -115,7 +117,7 @@ const Sidebar = ({ mobileOpen, onMobileClose }) => {
 
       {/* Logout */}
       <button
-        onClick={handleLogout}
+        onClick={() => setShowLogoutConfirm(true)}
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -162,6 +164,36 @@ const Sidebar = ({ mobileOpen, onMobileClose }) => {
           {sidebarContent}
         </div>
       </aside>
+      {/* Logout Confirmation Modal */}
+      {showLogoutConfirm && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setShowLogoutConfirm(false)}>
+          <div style={{ background: '#1e293b', borderRadius: '1rem', padding: '2rem', width: '90%', maxWidth: '360px', textAlign: 'center', boxShadow: '0 20px 60px rgba(0,0,0,0.4)' }} onClick={(e) => e.stopPropagation()}>
+            <div style={{ marginBottom: '1rem' }}>
+              <svg width="48" height="48" fill="none" stroke="#f59e0b" viewBox="0 0 24 24" style={{ margin: '0 auto' }}><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
+            </div>
+            <h3 style={{ color: '#fff', fontSize: '1.125rem', fontWeight: 600, margin: '0 0 0.5rem' }}>Confirm Logout</h3>
+            <p style={{ color: '#94a3b8', fontSize: '0.875rem', margin: '0 0 1.5rem' }}>Are you sure you want to log out?</p>
+            <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center' }}>
+              <button
+                onClick={() => setShowLogoutConfirm(false)}
+                style={{ padding: '0.6rem 1.5rem', borderRadius: '0.5rem', fontSize: '0.875rem', fontWeight: 500, color: '#fff', background: '#334155', border: 'none', cursor: 'pointer', transition: 'background 0.2s' }}
+                onMouseEnter={(e) => e.currentTarget.style.background = '#475569'}
+                onMouseLeave={(e) => e.currentTarget.style.background = '#334155'}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleLogout}
+                style={{ padding: '0.6rem 1.5rem', borderRadius: '0.5rem', fontSize: '0.875rem', fontWeight: 500, color: '#fff', background: '#dc2626', border: 'none', cursor: 'pointer', transition: 'background 0.2s' }}
+                onMouseEnter={(e) => e.currentTarget.style.background = '#b91c1c'}
+                onMouseLeave={(e) => e.currentTarget.style.background = '#dc2626'}
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   )
 }
