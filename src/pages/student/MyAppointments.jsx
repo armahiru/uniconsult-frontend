@@ -4,6 +4,7 @@ import { studentAPI } from '../../services/api'
 import toast from 'react-hot-toast'
 import Navbar from '../../components/Navbar'
 import Sidebar from '../../components/Sidebar'
+import LoadingSpinner from '../../components/LoadingSpinner'
 
 const MyAppointments = () => {
   const [appointments, setAppointments] = useState([])
@@ -62,20 +63,7 @@ const MyAppointments = () => {
     return { background: '#fee2e2', color: '#991b1b' }
   }
 
-  if (loading) return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc' }}>
-      <Navbar onMenuToggle={() => setSidebarOpen(!sidebarOpen)} />
-      <div style={{ display: 'flex' }}>
-        <Sidebar mobileOpen={sidebarOpen} onMobileClose={() => setSidebarOpen(false)} />
-        <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
-          <svg className="animate-spin" style={{ width: '2rem', height: '2rem', color: '#2563eb' }} fill="none" viewBox="0 0 24 24">
-            <circle style={{ opacity: 0.25 }} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-            <path style={{ opacity: 0.75 }} fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-          </svg>
-        </main>
-      </div>
-    </div>
-  )
+  if (loading) return <LoadingSpinner sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc' }} className="mobile-overflow-fix">

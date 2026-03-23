@@ -4,31 +4,24 @@ import { studentAPI } from '../../services/api'
 import { useAuth } from '../../context/AuthContext'
 import Navbar from '../../components/Navbar'
 import Sidebar from '../../components/Sidebar'
+import LoadingSpinner from '../../components/LoadingSpinner'
 
 const Dashboard = () => {
   const { user } = useAuth()
   const [stats, setStats] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [progress, setProgress] = useState(0)
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   useEffect(() => { fetchDashboard() }, [])
 
   const fetchDashboard = async () => {
-    setProgress(10)
-    const timer1 = setTimeout(() => setProgress(40), 200)
-    const timer2 = setTimeout(() => setProgress(70), 500)
     try {
       const { data } = await studentAPI.getDashboard()
-      setProgress(90)
       if (data.success) setStats(data.dashData)
     } catch (error) {
       console.error('Failed to fetch dashboard', error)
     }
-    clearTimeout(timer1)
-    clearTimeout(timer2)
-    setProgress(100)
-    setTimeout(() => setLoading(false), 300)
+    setLoading(false)
   }
 
   const getNextApproved = () => {
@@ -37,25 +30,7 @@ const Dashboard = () => {
     return stats.latestAppointments.find(a => a.status === 'APPROVED' && new Date(a.date) >= now)
   }
 
-  if (loading) {
-    return (
-      <div style={{ minHeight: '100vh', background: '#f8fafc' }}>
-        <Navbar onMenuToggle={() => setSidebarOpen(!sidebarOpen)} />
-        <div style={{ display: 'flex' }}>
-          <Sidebar mobileOpen={sidebarOpen} onMobileClose={() => setSidebarOpen(false)} />
-          <main style={{ flex: 1, padding: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <div style={{ maxWidth: '24rem', width: '100%', textAlign: 'center' }}>
-              <p style={{ marginBottom: '1rem', fontWeight: 600, color: '#6b7280' }}>Loading dashboard...</p>
-              <div className="progress-bar-container">
-                <div className="progress-bar-fill" style={{ width: `${progress}%` }} />
-              </div>
-              <p className="progress-text">{progress}%</p>
-            </div>
-          </main>
-        </div>
-      </div>
-    )
-  }
+  if (loading) return <LoadingSpinner sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
   const upcoming = getNextApproved()
 

@@ -4,6 +4,7 @@ import { lecturerAPI } from '../../services/api'
 import toast from 'react-hot-toast'
 import Navbar from '../../components/Navbar'
 import Sidebar from '../../components/Sidebar'
+import LoadingSpinner from '../../components/LoadingSpinner'
 
 const Profile = () => {
   const [profile, setProfile] = useState(null)
@@ -112,22 +113,7 @@ const Profile = () => {
   }
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-main">
-        <Navbar onMenuToggle={() => setSidebarOpen(!sidebarOpen)} />
-        <div className="page-layout">
-          <Sidebar mobileOpen={sidebarOpen} onMobileClose={() => setSidebarOpen(false)} />
-          <main className="page-main">
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
-              <svg className="animate-spin" style={{ width: '2rem', height: '2rem', color: 'var(--blue-600)' }} fill="none" viewBox="0 0 24 24">
-                <circle style={{ opacity: 0.25 }} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                <path style={{ opacity: 0.75 }} fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-              </svg>
-            </div>
-          </main>
-        </div>
-      </div>
-    )
+    return <LoadingSpinner sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
   }
 
   if (!profile) return null
